@@ -1,0 +1,23 @@
+output "resource_group_name" {
+  value = module.resource-group.resource_group_name
+  description = "Resource group name"
+}
+
+output "storage_account_name" {
+  value       = module.storage-account.storage_account_name
+  description = "Storage account name"
+}
+
+output "application_insights" {
+  value = module.az-functionApp.application_insights
+  description = "Application insights"
+}
+
+output "app_service_plan_name" {
+  value = module.az-functionApp.app_service_plan_name
+  description = "App service plan name"
+}
+output "function_app_name" {
+  value = module.az-functionApp.function_app_name
+  description = "Function app name"
+}

@@ -1,0 +1,65 @@
+#################################################################################
+# Resource Group      Module to create resource group for Azure Function        #
+#################################################################################
+module "resource-group" {
+//  Source can be github repository as well
+  source                = "../../modules/az-resource-group"
+
+  app_name              = var.app_name
+  environment           = var.environment
+  rg_prefix             = var.rg_prefix
+  location              = var.location
+}
+
+#################################################################################
+# Storage Account      Module to create storage account for Azure Function      #
+#################################################################################
+module "storage-account" {
+//  Source can be github repository as well
+    source = "../../modules/az-storage-account"
+
+    subscription_id        = var.subscription_id
+    client_id              = var.client_id
+    client_secret          = var.client_secret
+    tenant_id              = var.tenant_id
+
+    resource_group_name    = module.resource-group.resource_group_name
+    location               = var.location
+    storageAccountName     = var.storageAccountName
+    accountTier            = var.accountTier               
+    accountReplicationType = var.accountReplicationType    
+}
+
+################################################################################################
+# Function App      Module to create function app , app service plan  and application insights #
+################################################################################################
+module "az-functionApp" {
+//  Source can be github repository as well
+    source = "../../modules/az-functionApp" 
+  
+    subscription_id        = var.subscription_id
+    client_id              = var.client_id
+    client_secret          = var.client_secret
+    tenant_id              = var.tenant_id
+
+    location               = var.location
+    resource_group_name    = module.resource-group.resource_group_name
+    application_insights   = var.application_insights
+    app_service_plan_name  = var.app_service_plan_name
+    kind                   = var.kind
+    app_service_plan_sku_tier = var.app_service_plan_sku_tier
+    app_service_plan_sku_size = var.app_service_plan_sku_size
+    reserved               = var.reserved
+
+    function_app_name      = var.function_app_name
+    storageAccountName     = var.storageAccountName
+    storage_account_access_key = module.storage-account.storage_account_primary_access_key
+    
+    os_type                = var.os_type
+    linux_fx_version       = var.linux_fx_version
+    use_32_bit_worker_process = var.use_32_bit_worker_process
+
+    application_type        = var.application_type
+    function_worker_runtime = var.function_worker_runtime
+    version1                = var.version1
+}

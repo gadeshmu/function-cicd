@@ -1,0 +1,29 @@
+####################################################
+# Azure provider configuration                     #
+####################################################
+provider "azurerm" {
+  subscription_id = var.subscription_id
+  client_id       = var.client_id
+  client_secret   = var.client_secret
+  tenant_id       = var.tenant_id
+
+  features {}
+}
+
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 2.52.0"
+      # https://www.terraform.io/docs/configuration/providers.html#provider-source
+    }
+  }
+  backend "azurerm" {
+    resource_group_name  = "swf-rg"
+    storage_account_name = "swfstorageaccountsk01"
+    container_name       = "tfstate"
+    key                  = "tfstate-function"
+  }
+  
+  required_version = ">= 0.13"
+}
